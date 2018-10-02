@@ -30,7 +30,8 @@ class App extends Component {
 
 	searchBooks = () => {
 		this.setState({ resultStatus: 1 })
-		axios.get('http://localhost:3001/search/' + this.state.bookName + '/' + this.state.currentPage)
+		// axios.get('http://localhost:3001/search/' + this.state.bookName + '/' + this.state.currentPage)
+		axios.get('https://goodreads-dhruw-node.herokuapp.com/search/' + this.state.bookName + '/' + this.state.currentPage)
 			.then(response => {
 
 				// 0 : Welcome

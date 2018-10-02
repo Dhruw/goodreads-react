@@ -15,15 +15,22 @@ const Header = (props) => {
 				<Navbar.Form pullRight>
 					<FormGroup>
 						<InputGroup>
-							<FormControl type="text" onChange={props.updateBookName} />
+							<FormControl
+								type="text"
+								onChange={props.updateBookName}
+								onKeyPress={(event) => { if (event.key === 'Enter') props.searchBooks() }}
+								placeholder="Search . . ."
+							/>
 							<InputGroup.Button>
-								<Button onClick={props.searchBooks} >
+								<Button
+									onClick={props.searchBooks}
+									disabled={props.bookName === ""}
+								>
 									<i className="fa fa-search"></i>
 								</Button>
 							</InputGroup.Button>
 						</InputGroup>
 					</FormGroup>
-
 				</Navbar.Form>
 			</Navbar.Collapse>
 		</Navbar>

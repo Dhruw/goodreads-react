@@ -11,6 +11,9 @@ class ResultList extends React.Component {
 				<ListGroup>
 					{
 						this.props.searchResults.map(result => {
+
+							let avg_rating = (typeof result.average_rating === "string") ? parseFloat(result.average_rating).toFixed(2) : parseFloat(result.average_rating["$t"]).toFixed(2);
+
 							return (
 								<ListGroupItem
 									key={result.id['$t']}
@@ -23,8 +26,8 @@ class ResultList extends React.Component {
 									
 									<small> By: {result.best_book.author.name} </small>
 									<span className="pull-right">
-										<RatingStar rating={result.average_rating} />
-										{result.average_rating}
+										<RatingStar rating={avg_rating} />
+										{avg_rating}
 										<br/>
 										<small>
 											Based on {result.ratings_count.$t} ratings

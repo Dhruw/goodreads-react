@@ -5,6 +5,9 @@ import RatingStar from '../Common/RatingStar/RatingStar';
 class BookDetails extends React.Component {
 
 	render() {
+
+		let avg_rating = (typeof this.props.book.average_rating === "string") ? parseFloat(this.props.book.average_rating).toFixed(2) : parseFloat(this.props.book.average_rating["$t"]).toFixed(2);
+
 		return (
 			<Panel>
 				<Panel.Heading>
@@ -33,8 +36,8 @@ class BookDetails extends React.Component {
 										Rating
 									</td>
 									<td>
-										<RatingStar rating={this.props.book.average_rating} />
-										{this.props.book.average_rating}
+										<RatingStar rating={avg_rating} />
+										{avg_rating}
 										<small>
 											(Based on  {this.props.book.ratings_count.$t} Ratings)
 									</small>

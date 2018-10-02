@@ -4,6 +4,8 @@ import axios from 'axios';
 import SearchResults from './Components/SearchResults/SearchResults';
 import BookDetails from './Components/BookDetails/BookDetails';
 import Header from './Components/Header/Header';
+import Welcome from './Components/Welcome/Welcome';
+import Message from './Components/Common/Message/Message';
 
 import { Grid, Row, Col } from 'react-bootstrap';
 
@@ -13,7 +15,7 @@ class App extends Component {
 		super();
 
 		this.state = {
-			bookName: "x",
+			bookName: "",
 			searchResults: "",
 			resultStatus: 0,
 			detailBook: false,
@@ -71,27 +73,28 @@ class App extends Component {
 	}
 
 	updatePage = (num, reset = false) => {
-		if( (num < 0) && (this.state.currentPage === 1 ) || (num > 0) && (this.state.currentPage === this.state.totalPages) || (num == this.state.currentPage)  )
+		if (((num < 0) && (this.state.currentPage === 1)) || ((num > 0) && (this.state.currentPage === this.state.totalPages)) || (num == this.state.currentPage))
 			return;
 
 		let newPage = 1;
-		if(reset){
+		if (reset) {
 			newPage = num
 		}
 		else {
 			newPage = this.state.currentPage + num;
 		}
-		this.setState({currentPage: newPage}, this.searchBooks)		
+		this.setState({ currentPage: newPage }, this.searchBooks)
 	}
 
-	componentDidMount = () => {
-		this.searchBooks();
-	}
+	// componentDidMount = () => {
+	// 	this.searchBooks();
+	// }
 
 	render() {
 		return (
 			<React.Fragment>
 				<Header
+					bookName={this.state.bookName}
 					updateBookName={this.updateBookName}
 					searchBooks={this.searchBooks}
 				/>
@@ -100,21 +103,12 @@ class App extends Component {
 					<Row>
 						<Col xs={12}>
 
-							{
-								this.state.resultStatus === 0 ?
-									<span> "Welcome" </span>
-									:
-									null
-							}
-
-							{this.state.resultStatus === 1 ?
-								<div style={{ fontSize: '31px', marginTop: '20%', color: '#fff', textAlign: 'center' }}>
-									<i className="fa fa-spinner fa-spin"></i>
-									Loading . . .
-								</div>
-								:
-								null
-
+							{this.state.resultStatus === 0 ? <Welcome /> : null}
+							{this.state.resultStatus === 1 ? <Message
+										classes="fa fa-spinner fa-spin"
+										message="Loading"
+										/>  
+										: null
 							}
 							{
 								this.state.resultStatus === 2 ?
@@ -128,29 +122,27 @@ class App extends Component {
 									:
 									null
 							}
-
 							{
 								this.state.resultStatus === 4 ?
-									<span> "No Result Found" </span>
+									<Message 
+										classes="fa fa-exclamation"
+										message="No Result Found"
+									/>
+									: null
+							}
+							{
+								this.state.detailBook ?
+									<BookDetails
+										book={this.state.detailBook}
+										hideDetails={this.hideDetails}
+									/>
 									:
 									null
 							}
 
 						</Col>
 					</Row>
-
-					{
-						this.state.detailBook ?
-							<BookDetails
-								book={this.state.detailBook}
-								hideDetails={this.hideDetails}
-							/>
-							:
-							null
-					}
-
 				</Grid>
-
 			</React.Fragment>
 		);
 	}

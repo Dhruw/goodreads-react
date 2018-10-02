@@ -55,21 +55,3 @@ const Paginations = (props) => {
 }
 
 export default Paginations;
-
-{/* <Pager>
-	<Pager.Item 
-		previous 
-		disabled={ this.state.page <= 1}  
-		onClick={() => this.updatePage(-1)} 
-	>
-		&larr; Previous Page
-	  </Pager.Item>
-
-	<Pager.Item 
-		next 
-		onClick={() => this.updatePage(+1)}
-		disabled={ this.state.page >= this.state.searchResults['total-results']}
-	>
-		Next Page &rarr;
-	  </Pager.Item>
-</Pager> */}

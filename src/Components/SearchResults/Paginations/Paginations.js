@@ -1,32 +1,53 @@
 import React from 'react';
+import { Pagination } from 'react-bootstrap';
 
 const Paginations = (props) => {
+
+	let pageNumbers = [];
+	let totalPages = props.totalPages;
+	let startPage = 1;
+	let endPage = 1;
+
+	if (props.currentPage < 4) {
+		startPage = 1;
+		endPage = (totalPages <= 5 ? totalPages : 5)
+	}
+	else if (props.currentPage > (totalPages - 3)) {
+		endPage = totalPages;
+		startPage = (totalPages - 4) < 0 ? 1 : (totalPages - 4);
+	}
+	else {
+		startPage = (props.currentPage - 2)
+		endPage = (props.currentPage + 2)
+	}
+
+	for (let i = startPage; i <= endPage; i++)
+		pageNumbers.push(i);
 
 	return (
 		<Pagination>
 			<Pagination.First
-				onClick={() => this.updatePage(1, true)}
+				onClick={() => props.updatePage(1, true)}
 			/>
 			<Pagination.Prev
-				onClick={() => this.updatePage(-1)}
+				onClick={() => props.updatePage(-1)}
+				disabled={props.currentPage <= 1}
 			/>
-			<Pagination.Ellipsis />
 
-			<Pagination.Item>{1}</Pagination.Item>
-			<Pagination.Item>{10}</Pagination.Item>
-			<Pagination.Item>{11}</Pagination.Item>
-			<Pagination.Item active>{12}</Pagination.Item>
-			<Pagination.Item>{13}</Pagination.Item>
-			<Pagination.Item disabled>{14}</Pagination.Item>
+			{
+				pageNumbers.map(num => <Pagination.Item
+					key={num}
+					active={num === props.currentPage}
+					onClick={() => props.updatePage(num, true)}
+				> {num} </Pagination.Item>)
+			}
 
-			<Pagination.Ellipsis />
-
-			{/* <Pagination.Item>{20}</Pagination.Item> */}
 			<Pagination.Next
-				onClick={() => this.updatePage(1)}
+				onClick={() => props.updatePage(1)}
+				disabled={props.currentPage >= totalPages}
 			/>
 			<Pagination.Last
-				onClick={() => this.updatePage(this.state.searchResults['total-results'])}
+				onClick={() => props.updatePage(totalPages, true)}
 			/>
 		</Pagination>
 	)

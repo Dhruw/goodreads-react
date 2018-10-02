@@ -13,11 +13,12 @@ class App extends Component {
 		super();
 
 		this.state = {
-			bookName: "",
+			bookName: "x",
 			searchResults: "",
 			resultStatus: 0,
 			detailBook: false,
-			page: 1,
+			currentPage: 1,
+			totalPages: 1
 		}
 	}
 
@@ -27,8 +28,13 @@ class App extends Component {
 
 	searchBooks = () => {
 		this.setState({ resultStatus: 1 })
-		axios.get('http://localhost:3001/search/' + this.state.bookName + '/' + this.state.page)
+		axios.get('http://localhost:3001/search/' + this.state.bookName + '/' + this.state.currentPage)
 			.then(response => {
+
+				// 0 : Welcome
+				// 1 : Loading
+				// 2 : Show Results
+				// 4 : No Result
 
 				if (response.data.results === "") {
 					this.setState({
@@ -40,7 +46,8 @@ class App extends Component {
 				if (response.data.results.work.length > 0)
 					this.setState({
 						searchResults: response.data,
-						resultStatus: 2
+						resultStatus: 2,
+						totalPages: parseInt((response.data['total-results'] / 20), 10)
 					})
 
 			})
@@ -59,20 +66,27 @@ class App extends Component {
 	hideDetails = () => {
 		this.setState({
 			detailBook: false,
-			resultStatus: true,
+			resultStatus: 2,
 		})
 	}
 
 	updatePage = (num, reset = false) => {
-		if (reset)
-			this.setState({ page: num })
-		else
-			this.setState({ page: this.state.page + parseInt(num, 10) })
+		if( (num < 0) && (this.state.currentPage === 1 ) || (num > 0) && (this.state.currentPage === this.state.totalPages) || (num == this.state.currentPage)  )
+			return;
+
+		let newPage = 1;
+		if(reset){
+			newPage = num
+		}
+		else {
+			newPage = this.state.currentPage + num;
+		}
+		this.setState({currentPage: newPage}, this.searchBooks)		
 	}
 
-	// componentDidMount = () => {
-	// 	this.searchBooks();
-	// }
+	componentDidMount = () => {
+		this.searchBooks();
+	}
 
 	render() {
 		return (
@@ -106,7 +120,10 @@ class App extends Component {
 								this.state.resultStatus === 2 ?
 									<SearchResults
 										searchResults={this.state.searchResults}
+										currentPage={this.state.currentPage}
+										totalPages={this.state.totalPages}
 										showDetails={this.showDetails}
+										updatePage={this.updatePage}
 									/>
 									:
 									null

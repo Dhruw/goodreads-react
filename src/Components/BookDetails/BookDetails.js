@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Row, Col, Panel, Button, ButtonToolbar, Image, ListGroup, ListGroupItem } from 'react-bootstrap';
+import { Table, Row, Col, Panel, Button, Image } from 'react-bootstrap';
 import RatingStar from '../Common/RatingStar/RatingStar';
 
 class BookDetails extends React.Component {

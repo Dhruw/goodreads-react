@@ -4,7 +4,6 @@ const Stars = (props) => {
 
 	let renderArray = [];
 
-	console.log(props)
 	for( let i = 0; i < 5; i++)
 	{
 		if( i < Math.floor(props.rating) )

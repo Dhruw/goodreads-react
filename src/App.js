@@ -3,8 +3,9 @@ import './App.css';
 import axios from 'axios';
 import SearchResults from './Components/SearchResults/SearchResults';
 import BookDetails from './Components/BookDetails/BookDetails';
+import Header from './Components/Header/Header';
 
-import { Navbar, FormGroup, InputGroup, FormControl, Button, Grid, Row, Col } from 'react-bootstrap';
+import { Grid, Row, Col } from 'react-bootstrap';
 
 class App extends Component {
 
@@ -12,10 +13,11 @@ class App extends Component {
 		super();
 
 		this.state = {
-			bookName: "x",
+			bookName: "",
 			searchResults: "",
-			resultStatus: false,
-			detailBook: false
+			resultStatus: 0,
+			detailBook: false,
+			page: 1,
 		}
 	}
 
@@ -24,12 +26,23 @@ class App extends Component {
 	}
 
 	searchBooks = () => {
-		axios.get('http://localhost:3001/search/' + this.state.bookName)
+		this.setState({ resultStatus: 1 })
+		axios.get('http://localhost:3001/search/' + this.state.bookName + '/' + this.state.page)
 			.then(response => {
-				this.setState({
-					searchResults: response.data,
-					resultStatus: true
-				})
+
+				if (response.data.results === "") {
+					this.setState({
+						resultStatus: 4
+					})
+					return;
+				}
+
+				if (response.data.results.work.length > 0)
+					this.setState({
+						searchResults: response.data,
+						resultStatus: 2
+					})
+
 			})
 			.catch(error => {
 				console.log(error)
@@ -49,43 +62,48 @@ class App extends Component {
 			resultStatus: true,
 		})
 	}
-	componentDidMount = () => {
-		this.searchBooks();
+
+	updatePage = (num, reset = false) => {
+		if (reset)
+			this.setState({ page: num })
+		else
+			this.setState({ page: this.state.page + parseInt(num, 10) })
 	}
+
+	// componentDidMount = () => {
+	// 	this.searchBooks();
+	// }
 
 	render() {
 		return (
 			<React.Fragment>
-
-				<Navbar fixedTop>
-					<Navbar.Header>
-						<Navbar.Brand>
-							GoodReads World
-						</Navbar.Brand>
-						<Navbar.Toggle />
-					</Navbar.Header>
-					<Navbar.Collapse>
-						<Navbar.Form pullRight>
-							<FormGroup>
-								<InputGroup>
-									<FormControl type="text" onChange={this.updateBookName} />
-									<InputGroup.Button>
-										<Button onClick={this.searchBooks} >
-											<i className="fa fa-search"></i>
-										</Button>
-									</InputGroup.Button>
-								</InputGroup>
-							</FormGroup>
-
-						</Navbar.Form>
-					</Navbar.Collapse>
-				</Navbar>
+				<Header
+					updateBookName={this.updateBookName}
+					searchBooks={this.searchBooks}
+				/>
 
 				<Grid className="main-area">
 					<Row>
 						<Col xs={12}>
+
 							{
-								this.state.resultStatus ?
+								this.state.resultStatus === 0 ?
+									<span> "Welcome" </span>
+									:
+									null
+							}
+
+							{this.state.resultStatus === 1 ?
+								<div style={{ fontSize: '31px', marginTop: '20%', color: '#fff', textAlign: 'center' }}>
+									<i className="fa fa-spinner fa-spin"></i>
+									Loading . . .
+								</div>
+								:
+								null
+
+							}
+							{
+								this.state.resultStatus === 2 ?
 									<SearchResults
 										searchResults={this.state.searchResults}
 										showDetails={this.showDetails}
@@ -93,9 +111,16 @@ class App extends Component {
 									:
 									null
 							}
+
+							{
+								this.state.resultStatus === 4 ?
+									<span> "No Result Found" </span>
+									:
+									null
+							}
+
 						</Col>
 					</Row>
-					<hr />
 
 					{
 						this.state.detailBook ?
@@ -106,7 +131,9 @@ class App extends Component {
 							:
 							null
 					}
+
 				</Grid>
+
 			</React.Fragment>
 		);
 	}

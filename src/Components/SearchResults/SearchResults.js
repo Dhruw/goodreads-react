@@ -1,24 +1,18 @@
 import React from 'react';
+import ResultList from './ResultList/ResultList';
+import { Grid } from 'react-bootstrap';
 
 class SearchResults extends React.Component {
 
 	render() {
-		console.log(this.props.searchResults)
 		return (
-			<div>
-				Test
-				{
-					this.props.searchResults.map(result => {
-						return (
-							<div
-								key={result.id['$t']}
-								onClick={() => this.props.showDetails(result)}
-							> {result.best_book.title} </div>
-						)
-					})
-				}
-
-			</div>
+			<Grid fluid>
+				About {this.props.searchResults['total-results']} Results ({this.props.searchResults['query-time-seconds']} Seconds)
+					<ResultList
+						searchResults={this.props.searchResults.results.work}
+						showDetails={this.props.showDetails}
+					/>
+			</Grid>
 		)
 	}
 }

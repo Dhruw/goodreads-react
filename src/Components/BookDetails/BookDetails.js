@@ -1,27 +1,66 @@
 import React from 'react';
+import { Table, Row, Col, Panel, Button, ButtonToolbar, Image, ListGroup, ListGroupItem } from 'react-bootstrap';
+import RatingStar from '../Common/RatingStar/RatingStar';
 
 class BookDetails extends React.Component {
 
-	render(){
+	render() {
 		return (
-			<div>
-				
-				<br/> ID			 				{this.props.book.id.$t}
-				<br/> Count			 				{this.props.book.books_count.$t}
-				<br/> Ratings Count					{this.props.book.ratings_count.$t}
-				<br/> text_reviews_count			{this.props.book.text_reviews_count.$t}
-				<br/> original_publication_year		{this.props.book.original_publication_year.$t}
-				<br/> original_publication_month	{this.props.book.original_publication_month.$t}
-				<br/> original_publication_day		{this.props.book.original_publication_day.$t}
-				<br/> average_rating			 	{this.props.book.average_rating	}
-				<br/> type			 				{this.props.book.best_book.type}
-				<br/> id			 				{this.props.book.best_book.id.$t}
-				<br/> Title			 				{this.props.book.best_book.title}
-				<br/> Author Name					{this.props.book.best_book.author.name}
-				<br/> Image 						{this.props.book.best_book.image_url}
-				<br/> Small Image					{this.props.book.best_book.small_image_url}
-				
-			</div>
+			<Panel>
+				<Panel.Heading>
+					<h4> {this.props.book.best_book.title}
+						<Button onClick={this.props.hideDetails} className="pull-right" > Back </Button>
+					</h4>
+				</Panel.Heading>
+
+				<Row>
+					<Col md={4}>
+						<Image src={this.props.book.best_book.image_url} alt={this.props.book.best_book.title} responsive />
+					</Col>
+					<Col md={8}>
+						<Table striped hover>
+							<tbody>
+								<tr>
+									<td>
+										ID
+									</td>
+									<td>
+										{this.props.book.id.$t}
+									</td>
+								</tr>
+								<tr>
+									<td>
+										Rating
+									</td>
+									<td>
+										<RatingStar rating={this.props.book.average_rating} />
+										{this.props.book.average_rating}
+										<small>
+											(Based on  {this.props.book.ratings_count.$t} Ratings)
+									</small>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										Published On:
+									</td>
+									<td>
+										{this.props.book.original_publication_month.$t}/{this.props.book.original_publication_day.$t}/{this.props.book.original_publication_year.$t}
+									</td>
+								</tr>
+								<tr>
+									<td>
+										Author:
+									</td>
+									<td>
+										{this.props.book.best_book.author.name}
+									</td>
+								</tr>
+							</tbody>
+						</Table>
+					</Col>
+				</Row>
+			</Panel>
 		)
 	}
 

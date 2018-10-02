@@ -22,6 +22,14 @@
   font-size: large;
 }
 
+.fa.fa-star, .fa.fa-star-o {
+	color: gold;
+}
+
+.main-area {
+	margin-top: 80px;
+}
+
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }

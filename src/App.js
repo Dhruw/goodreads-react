@@ -4,6 +4,8 @@ import axios from 'axios';
 import SearchResults from './Components/SearchResults/SearchResults';
 import BookDetails from './Components/BookDetails/BookDetails';
 
+import { Navbar, FormGroup, InputGroup, FormControl, Button, Grid, Row, Col } from 'react-bootstrap';
+
 class App extends Component {
 
 	constructor() {
@@ -35,39 +37,77 @@ class App extends Component {
 	}
 
 	showDetails = (book) => {
-		// console.log(book)
 		this.setState({
-			detailBook: book
+			detailBook: book,
+			resultStatus: false,
 		})
+	}
+
+	hideDetails = () => {
+		this.setState({
+			detailBook: false,
+			resultStatus: true,
+		})
+	}
+	componentDidMount = () => {
+		this.searchBooks();
 	}
 
 	render() {
 		return (
-			<div>
-				<input type="text" onChange={this.updateBookName} value="x" />
-				<button onClick={this.searchBooks} > Search </button>
+			<React.Fragment>
 
-				{
-					this.state.resultStatus ?
-					<SearchResults 
-						searchResults={this.state.searchResults.results.work}
-						showDetails={this.showDetails}
-					 />
-					:
-					null
-				}
+				<Navbar fixedTop>
+					<Navbar.Header>
+						<Navbar.Brand>
+							GoodReads World
+						</Navbar.Brand>
+						<Navbar.Toggle />
+					</Navbar.Header>
+					<Navbar.Collapse>
+						<Navbar.Form pullRight>
+							<FormGroup>
+								<InputGroup>
+									<FormControl type="text" onChange={this.updateBookName} />
+									<InputGroup.Button>
+										<Button onClick={this.searchBooks} >
+											<i className="fa fa-search"></i>
+										</Button>
+									</InputGroup.Button>
+								</InputGroup>
+							</FormGroup>
 
-				<hr/>
+						</Navbar.Form>
+					</Navbar.Collapse>
+				</Navbar>
 
-				{
-					this.state.detailBook ? 
-					<BookDetails
-						book={this.state.detailBook}
-					/>
-					:
-					null
-				}
-			</div>
+				<Grid className="main-area">
+					<Row>
+						<Col xs={12}>
+							{
+								this.state.resultStatus ?
+									<SearchResults
+										searchResults={this.state.searchResults}
+										showDetails={this.showDetails}
+									/>
+									:
+									null
+							}
+						</Col>
+					</Row>
+					<hr />
+
+					{
+						this.state.detailBook ?
+							<BookDetails
+								book={this.state.detailBook}
+								hideDetails={this.hideDetails}
+							/>
+							:
+							null
+					}
+				</Grid>
+			</React.Fragment>
 		);
 	}
 }
